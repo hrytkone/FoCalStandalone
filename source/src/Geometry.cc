@@ -180,6 +180,9 @@ G4VPhysicalVolume* Geometry::Construct()
     //      - 0.97 mm air
     //      - 1 mm aluminum
     // -----------------------------------------------------------------------------------
+    G4cout << "Alpide size is x=" << PIX_Alpide_X << " (" << NpixX << " pixels)  y=" << PIX_Alpide_Y << " (" << NpixY << " pixels) " << G4endl;
+    G4cout << "--> One channel size is then x=" << PIX_Alpide_X/NpixX << " y=" << PIX_Alpide_Y/NpixY << G4endl;  
+
     G4AssemblyVolume *assemblyPixel = new G4AssemblyVolume();
 
     G4double position_Z_PIX_Absorber	= PIX_Absorber_Z/2 + PIX_Z + PIX_AirGap + PIX_Al_Z;

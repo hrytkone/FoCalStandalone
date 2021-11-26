@@ -63,8 +63,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 			//G4cout << copyNo-IDnumber_PAD_First << " " << pos.x() << "  " << pos.y() << G4endl;
 	    } else if ( volume == fScoringVol_PIX ) {
             G4ThreeVector local_pos = theTouchable->GetHistory()->GetTopTransform().TransformPoint(pos);
-			G4int ix = (local_pos.x() + PIX_Alpide_X/2.)/PIX_X;
-			G4int iy = (local_pos.y() + PIX_Alpide_Y/2.)/PIX_Y;
+			G4int ix = (local_pos.x() + PIX_Alpide_X/2.)/(PIX_Alpide_X/NpixX);
+			G4int iy = (local_pos.y() + PIX_Alpide_Y/2.)/(PIX_Alpide_Y/NpixY);
             G4int ialpide = copyNo-IDnumber_PIX_First;
             G4int id = ix + NpixX*iy;
             //G4cout << ialpide << "  (ix,iy)=(" << ix << "," << iy << ")  id=" << id << "  edep=" << edepStep << G4endl;
