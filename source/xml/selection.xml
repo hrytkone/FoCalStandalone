@@ -1,0 +1,5 @@
+<lcgdict>
+<class name="std::basic_string<char>" />
+<class name="G4String"/>
+<class name="CLHEP::Hep3Vector"/>
+</lcgdict>
