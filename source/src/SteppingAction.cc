@@ -60,7 +60,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 	if(edepStep > 0){
 	    if ( volume == fScoringVol_PAD ) {
 	        fEventAction->AddeDepPAD(copyNo-IDnumber_PAD_First, edepStep);
-			//G4cout << copyNo-IDnumber_PAD_First << " " << pos.x() << "  " << pos.y() << G4endl;
+			//G4cout << copyNo-IDnumber_PAD_First << " " << pos.x() << "  " << pos.y() << "  " << edepStep << G4endl;
 	    } else if ( volume == fScoringVol_PIX ) {
             G4ThreeVector local_pos = theTouchable->GetHistory()->GetTopTransform().TransformPoint(pos);
 			G4int ix = (local_pos.x() + PIX_Alpide_X/2.)/(PIX_Alpide_X/NpixX);

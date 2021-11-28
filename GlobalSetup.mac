@@ -7,9 +7,9 @@
 ## Invoke the application
 /run/beamOn 0
 /random/setSeeds 41241 87053
- 
+
 
 /gun/particle pi+
-/gun/energy 10 GeV
-/run/beamOn 9
+/gun/energy 20 GeV
+/run/beamOn 20
 #exit

@@ -107,6 +107,7 @@ void RootIO::WriteEvent(int e)
 
 void RootIO::WritePad(int i, float a)
 {
+    G4cout << "ch " << i << " : " << a << G4endl;
   data_pad[i] = a;
 }
 
@@ -145,10 +146,10 @@ void RootIO::Clear(){
             data_alpide[i][j] = 0;
         }
     }
-	particle_px=0;
-	particle_py=0;
-	particle_pz=0;
-	particle_en=0;
+	particle_px = 0;
+	particle_py = 0;
+	particle_pz = 0;
+	particle_en = 0;
     vertex_x = 0;
     vertex_y = 0;
     vertex_z = 0;
@@ -165,8 +166,7 @@ void RootIO::Fill(){
 
 void RootIO::Close()
 {
-  fHitTree->Write();
-  fFile->Write();
+  fFile->Write("", TObject::kOverwrite);
   fFile->Close();
 }
 
