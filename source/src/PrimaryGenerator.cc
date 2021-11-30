@@ -40,8 +40,8 @@ void PrimaryGenerator::GeneratePrimaries(G4Event* anEvent)
 	//------------------------------------------------------------------------------
 {
 	// Gun position - randomization
-	G4double offset1 = 40.0*(G4UniformRand()-0.5);
-	G4double offset2 = 40.0*(G4UniformRand()-0.5);
+	G4double offset1 = 40.0*(G4UniformRand()-0.5)*mm;
+	G4double offset2 = 40.0*(G4UniformRand()-0.5)*mm;
 	G4ThreeVector position_1 = G4ThreeVector(offset1, offset2, 0.0);
 	//G4double angle1 = 0.0376*2*(G4UniformRand()-0.5)*deg;//1x1cm^2
 	//G4double angle2 = 0.0376*2*(G4UniformRand()-0.5)*deg;//1x1cm^2   //set the degree of particle d

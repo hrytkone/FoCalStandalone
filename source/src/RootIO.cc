@@ -46,35 +46,38 @@ static RootIO* instance = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RootIO::RootIO():fNevents(0)
+RootIO::RootIO() : fNevents(0)
 {
-  // initialize ROOT
-  TSystem ts;
-  gSystem->Load("libFoCal_MainClassesDict");
+    // initialize ROOT
+    TSystem ts;
+    gSystem->Load("libFoCal_MainClassesDict");
+    gInterpreter->GenerateDictionary("vector<pair<int,float>>", "vector");
+    gInterpreter->GenerateDictionary("vector<pair<int,float>>", "vector");
 
-  //gDebug = 1;
-  char helper[4000];
-  fFile = new TFile("hits.root","RECREATE");
-  fHitTree = new TTree("DataTree", "Data", 0);
-  fHitTree->SetDirectory(fFile);
-  fHitTree->Branch("event", &event, "event/I");
+    //gDebug = 1;
+    char helper[4000];
+    fFile = new TFile("hits.root","RECREATE");
+    fHitTree = new TTree("DataTree", "Data", 0);
+    fHitTree->SetDirectory(fFile);
+    fHitTree->Branch("event", &event, "event/I");
 
-  sprintf(helper, "data_pad[%d]/F", NpadX*NpadY*NumberPAD);
-  fHitTree->Branch("data_pad", &data_pad, helper );
+    sprintf(helper, "data_pad[%d]/F", NpadX*NpadY*NumberPAD);
+    fHitTree->Branch("data_pad", &data_pad, helper );
 
-  for (int ialpide=0; ialpide<NalpideLayer*NumberPixRow*NumberPixCol*NumberPIX; ialpide++) {
-      fHitTree->Branch(Form("data_alpide_%d", ialpide), &data_alpide[ialpide], Form("data_alpide[%d]/F", NpixX*NpixY));
-  }
+    for (int ipix=0; ipix<NumberPIX; ipix++) {
+        for (int ialpide=0; ialpide<NalpideLayer*NumberPixRow*NumberPixCol; ialpide++) {
+            fHitTree->Branch(Form("data_pix%d_alpide%d", ipix, ialpide), &data_alpide[ipix*NalpideLayer*NumberPixRow*NumberPixCol + ialpide]);
+        }
+    }
 
-  fHitTree->Branch("particle_px", &particle_px, "particle_px/F");
-  fHitTree->Branch("particle_py", &particle_py, "particle_py/F");
-  fHitTree->Branch("particle_pz", &particle_pz, "particle_pz/F");
-  fHitTree->Branch("particle_en", &particle_en, "particle_en/F");
+    fHitTree->Branch("particle_px", &particle_px, "particle_px/F");
+    fHitTree->Branch("particle_py", &particle_py, "particle_py/F");
+    fHitTree->Branch("particle_pz", &particle_pz, "particle_pz/F");
+    fHitTree->Branch("particle_en", &particle_en, "particle_en/F");
 
-  fHitTree->Branch("vertex_x", &vertex_x, "vertex_x/F");
-  fHitTree->Branch("vertex_y", &vertex_y, "vertex_y/F");
-  fHitTree->Branch("vertex_z", &vertex_z, "vertex_z/F");
-
+    fHitTree->Branch("vertex_x", &vertex_x, "vertex_x/F");
+    fHitTree->Branch("vertex_y", &vertex_y, "vertex_y/F");
+    fHitTree->Branch("vertex_z", &vertex_z, "vertex_z/F");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -88,53 +91,52 @@ RootIO::~RootIO()
 
 RootIO* RootIO::GetInstance()
 {
-  if (instance == 0 )
-  {
-    instance = new RootIO();
-  }
-  //G4cout << "instance" << G4endl;
-  return instance;
+    if (instance == 0 )
+    {
+        instance = new RootIO();
+    }
+    return instance;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RootIO::WriteEvent(int e)
 {
-  event = e;
+    event = e;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........   oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RootIO::WritePad(int i, float a)
 {
-    G4cout << "ch " << i << " : " << a << G4endl;
-  data_pad[i] = a;
+    data_pad[i] = a;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RootIO::WriteAlpide(int ialpide, int i, float a)
 {
-  data_alpide[ialpide][i] = a;
+    data_alpide[ialpide].push_back(std::make_pair(i, a));
+    //data_alpide[ialpide][i] = a;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RootIO::WriteVertex(float x, float y, float z)
 {
-  vertex_x = x;
-  vertex_y = y;
-  vertex_z = z;
+    vertex_x = x;
+    vertex_y = y;
+    vertex_z = z;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RootIO::WriteParticleKinematics(float px, float py, float pz, float en)
 {
-  particle_px = px;
-  particle_py = py;
-  particle_pz = pz;
-  particle_en = en;
+    particle_px = px;
+    particle_py = py;
+    particle_pz = pz;
+    particle_en = en;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -142,9 +144,10 @@ void RootIO::WriteParticleKinematics(float px, float py, float pz, float en)
 void RootIO::Clear(){
 	for (int i = 0; i < NpadX*NpadY*NumberPAD; i++) data_pad[i] = 0;
     for (int i = 0; i < NalpideLayer*NumberPixRow*NumberPixRow*NumberPIX; i++) {
-        for (int j = 0; j < NpixX*NpixY; j++) {
-            data_alpide[i][j] = 0;
-        }
+        data_alpide[i].clear();
+        //for (int j = 0; j < NpixX*NpixY; j++) {
+        //    data_alpide[i][j] = 0;
+        //}
     }
 	particle_px = 0;
 	particle_py = 0;
@@ -166,8 +169,8 @@ void RootIO::Fill(){
 
 void RootIO::Close()
 {
-  fFile->Write("", TObject::kOverwrite);
-  fFile->Close();
+    fFile->Write("", TObject::kOverwrite);
+    fFile->Close();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -34,9 +34,15 @@
 #include "TTree.h"
 #include "TFile.h"
 #include "TSystem.h"
+#include "TClonesArray.h"
 
 #include "EventAction.hh"
 #include "constants.hh"
+
+#include <vector>
+#include <utility> // std::pair from here
+
+using namespace std;
 
 /** @class RootIO
  *
@@ -45,41 +51,39 @@
  */
 
 /// Root IO implementation for the persistency example
-
 class RootIO
 {
 public:
-  virtual ~RootIO();
+    virtual ~RootIO();
 
-  static RootIO* GetInstance();
-  void WriteEvent(int e);
-  void WritePad(int i, float a);
-  void WriteAlpide(int ialpide, int i, float a);
-  void WriteParticleKinematics(float px, float py, float pz, float en);
-  void WriteVertex(float x, float y, float z);
-  void Fill();
-  void Clear();
-  void Close();
+    static RootIO* GetInstance();
+    void WriteEvent(int e);
+    void WritePad(int i, float a);
+    void WriteAlpide(int ialpide, int i, float a);
+    void WriteParticleKinematics(float px, float py, float pz, float en);
+    void WriteVertex(float x, float y, float z);
+    void Fill();
+    void Clear();
+    void Close();
 
 protected:
-  RootIO();
+    RootIO();
 
 private:
 
-  int event;
-  float data_pad[NpadX*NpadY*NumberPAD];
-  float data_pix[NpixX*NpixY*NumberPIX];
-  float data_alpide[NalpideLayer*NumberPixRow*NumberPixCol*NumberPIX][NpixX*NpixY];
-  float particle_px;
-  float particle_py;
-  float particle_pz;
-  float particle_en;
-  float vertex_x;
-  float vertex_y;
-  float vertex_z;
-  TFile* fFile;
-  TTree * fHitTree;
-  int fNevents;
+    int event;
+    float data_pad[NpadX*NpadY*NumberPAD];
+    vector<pair<int, float>> data_alpide[NalpideLayer*NumberPixRow*NumberPixCol*NumberPIX];
+    float particle_px;
+    float particle_py;
+    float particle_pz;
+    float particle_en;
+    float vertex_x;
+    float vertex_y;
+    float vertex_z;
+    TFile* fFile;
+    TTree * fHitTree;
+    int fNevents;
 
 };
 #endif // INCLUDE_ROOTIO_HH

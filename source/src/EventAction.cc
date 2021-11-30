@@ -40,7 +40,6 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
 }
 
 void EventAction::EndOfEventAction(const G4Event* event)
-    //************************************
 {
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 	RootIO::GetInstance()->WriteEvent(eventNum);
@@ -49,10 +48,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
 		for (int iy = 0; iy < NpixY; iy++) {
 			for (int ix = 0; ix < NpixX; ix++) {
 				G4int i = ix + NpixX*iy;// + NpixX*NpixY*ilayer;
-                GetSumPIX(ialpide, i);
 				analysisManager->FillH1(0, i, GetSumPIX(ialpide, i));
-				if (GetSumPIX(ialpide, i)) {
-					//if(ialpide == 0) G4cout << i << "  " << ialpide << "  " << ix << "  " << iy << "   " << GetSumPIX(ialpide, i) << G4endl;
+				if (GetSumPIX(ialpide, i)>0) {
+					//G4cout << i << "  " << ialpide << "  " << ix << "  " << iy << "   " << GetSumPIX(ialpide, i) << G4endl;
 			        RootIO::GetInstance()->WriteAlpide(ialpide, i, GetSumPIX(ialpide, i));
 				}
 			}

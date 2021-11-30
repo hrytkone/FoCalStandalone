@@ -8,8 +8,7 @@
 /run/beamOn 0
 /random/setSeeds 41241 87053
 
-
 /gun/particle pi+
 /gun/energy 20 GeV
-/run/beamOn 20
+/run/beamOn 500
 #exit

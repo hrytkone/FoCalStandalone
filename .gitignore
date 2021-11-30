@@ -4,3 +4,4 @@ cmake_install.cmake
 diagnostic.root
 hits.root
 libFoCal_MainClassesDict.so
+AutoDict*
