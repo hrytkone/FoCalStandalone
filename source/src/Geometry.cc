@@ -123,9 +123,11 @@ G4VPhysicalVolume* Geometry::Construct()
     // ----------------------
     //    Tungsten layers   |
     // ----------------------
+    G4cout << "\n=================================================================" << G4endl;
+    G4cout << "LAYERS : " << G4endl;
 	for(G4int ilayer=0; ilayer<NumberW; ilayer++){
 		G4double position_Z_W = Start_Z + PAD_Absorber_Z/2 + TotalLayerThickness;
-		G4cout << ilayer << " W " << position_Z_W << "  " << TotalLayerThickness << G4endl;
+		G4cout << ilayer << " W at " << position_Z_W << G4endl;
 
 		G4ThreeVector threeVect_PAD_W 	= G4ThreeVector(Start_X, Start_Y, position_Z_W);
 		G4RotationMatrix rotMtrx_PAD_W 	= G4RotationMatrix();
@@ -143,7 +145,7 @@ G4VPhysicalVolume* Geometry::Construct()
 	G4double position_Z_PAD_Silicon		= Start_Z + PAD_Z/2 + TotalLayerThickness;
     G4double position_Z_PAD_Glue	= Start_Z + PAD_Z + PAD_Glue_Z/2 + TotalLayerThickness;
     G4double position_Z_PAD_FPC		= Start_Z + PAD_Z + PAD_Glue_Z + PAD_FPC_Z/2 + TotalLayerThickness;
-	//G4cout << " PAD " << position_Z_PAD_Silicon << "  " << TotalLayerThickness << G4endl;
+	G4cout << NumberW << " PAD at " << position_Z_PAD_Silicon << G4endl;
 	for(int iy = 0; iy < NpadY; iy++){
 		for(int ix = 0; ix < NpadX; ix++){
 			G4double position_X_PAD_Silicon = (Start_X - PAD_MiniFoCal_X/2 + ix*PAD_X + PAD_X/2)*mm;
@@ -153,7 +155,7 @@ G4VPhysicalVolume* Geometry::Construct()
 			G4Transform3D    trans3D_PAD_W			= G4Transform3D(rotMtrx_PAD_Silicon, threeVect_PAD_Silicon);
 
 			G4int IDnumber_PAD = IDnumber_PAD_First + ix + NpadX*iy;
-			G4cout << "PAD " << IDnumber_PAD << "  " << ix << "  " << iy << G4endl;
+			//G4cout << "\tChannel id " << IDnumber_PAD << "  , ix  iy = " << ix << "  " << iy << G4endl;
 			new G4PVPlacement(trans3D_PAD_W, "PhysVol_Si", logVol_PAD_Silicon, physVol_World, false, IDnumber_PAD);
 		}
 	}
@@ -180,9 +182,6 @@ G4VPhysicalVolume* Geometry::Construct()
     //      - 0.97 mm air
     //      - 1 mm aluminum
     // -----------------------------------------------------------------------------------
-    G4cout << "Alpide size is x=" << PIX_Alpide_X << " (" << NpixX << " pixels)  y=" << PIX_Alpide_Y << " (" << NpixY << " pixels) " << G4endl;
-    G4cout << "--> One channel size is then x=" << PIX_Alpide_X/NpixX << " y=" << PIX_Alpide_Y/NpixY << G4endl;  
-
     G4AssemblyVolume *assemblyPixel = new G4AssemblyVolume();
 
     G4double position_Z_PIX_Absorber	= PIX_Absorber_Z/2 + PIX_Z + PIX_AirGap + PIX_Al_Z;
@@ -249,12 +248,17 @@ G4VPhysicalVolume* Geometry::Construct()
 
     for (int ipixlayer=0; ipixlayer<NumberPIX; ipixlayer++) {
         G4double position_Z_PIX      = Start_Z + PIX_Layer_Thickness/2. + TotalLayerThickness;
+        G4cout << NumberW+NumberPAD+ipixlayer << " PIX at " << position_Z_PIX << G4endl;
+
         G4ThreeVector threeVect_PIX  = G4ThreeVector(Start_X, Start_Y, position_Z_PIX);
         G4RotationMatrix rotMtrx_PIX = G4RotationMatrix();
         G4Transform3D trans3D_PIX    = G4Transform3D(rotMtrx_PIX, threeVect_PIX);
         assemblyPixel->MakeImprint( logVol_World, trans3D_PIX );
         TotalLayerThickness += PIX_Layer_Thickness + 5.*PIX_Absorber_Z;
     }
+    G4cout << "\nAlpide size is x=" << PIX_Alpide_X << " (" << NpixX << " pixels)  y=" << PIX_Alpide_Y << " (" << NpixY << " pixels) " << G4endl;
+    G4cout << "\t--> One channel size is then x=" << PIX_Alpide_X/NpixX << " mm  y=" << PIX_Alpide_Y/NpixY << " mm" << G4endl;
+    G4cout << "=================================================================" << G4endl;
 
     // Change alpide IDs
     int new_id = IDnumber_PIX_First;
@@ -266,7 +270,7 @@ G4VPhysicalVolume* Geometry::Construct()
             if (ptr->GetLogicalVolume()->GetMaterial()->GetName()=="G4_Si") {
                 ptr->SetCopyNo(new_id);
                 new_id++;
-                G4cout << ptr->GetCopyNo() << "   name : " << ptr->GetName() << G4endl;
+                //G4cout << ptr->GetCopyNo() << "   name : " << ptr->GetName() << G4endl;
             } else {
                 ptr->SetCopyNo(0);
             }

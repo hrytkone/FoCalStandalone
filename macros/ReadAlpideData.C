@@ -6,7 +6,6 @@ vector<pair<int,float>> *data_pix[npix*nalpide];
 void ReadAlpideData()
 {
     gInterpreter->GenerateDictionary("vector<pair<int,float>>", "vector");
-    gInterpreter->GenerateDictionary("vector<pair<int,float>>", "vector");
 
     TFile *fin = TFile::Open("hits.root", "READ");
     if (!fin) return;

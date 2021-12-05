@@ -52,7 +52,6 @@ RootIO::RootIO() : fNevents(0)
     TSystem ts;
     gSystem->Load("libFoCal_MainClassesDict");
     gInterpreter->GenerateDictionary("vector<pair<int,float>>", "vector");
-    gInterpreter->GenerateDictionary("vector<pair<int,float>>", "vector");
 
     //gDebug = 1;
     char helper[4000];
@@ -117,7 +116,6 @@ void RootIO::WritePad(int i, float a)
 void RootIO::WriteAlpide(int ialpide, int i, float a)
 {
     data_alpide[ialpide].push_back(std::make_pair(i, a));
-    //data_alpide[ialpide][i] = a;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -145,9 +143,6 @@ void RootIO::Clear(){
 	for (int i = 0; i < NpadX*NpadY*NumberPAD; i++) data_pad[i] = 0;
     for (int i = 0; i < NalpideLayer*NumberPixRow*NumberPixRow*NumberPIX; i++) {
         data_alpide[i].clear();
-        //for (int j = 0; j < NpixX*NpixY; j++) {
-        //    data_alpide[i][j] = 0;
-        //}
     }
 	particle_px = 0;
 	particle_py = 0;

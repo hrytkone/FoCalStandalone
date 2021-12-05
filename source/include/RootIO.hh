@@ -30,6 +30,9 @@
 #define INCLUDE_ROOTIO_HH 1
 
 // Include files
+#include <vector>
+#include <utility> // std::pair from here
+
 #include "TROOT.h"
 #include "TTree.h"
 #include "TFile.h"
@@ -38,9 +41,6 @@
 
 #include "EventAction.hh"
 #include "constants.hh"
-
-#include <vector>
-#include <utility> // std::pair from here
 
 using namespace std;
 
