@@ -6,6 +6,8 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "G4AssemblyVolume.hh"
+#include "G4Material.hh"
+#include "G4NistManager.hh"
 #include "constants.hh"
 
 class G4VPhysicalVolume;
@@ -23,12 +25,27 @@ class G4LogicalVolume;
 	//Active volumes
     G4LogicalVolume* GetScoringVol_PAD() const { return fScoringVol_PAD; }
     G4LogicalVolume* GetScoringVol_PIX() const { return fScoringVol_PIX; }
-    G4AssemblyVolume* GetAssemblyVol_PIX() const { return fAssemblyVol_PIX; }
+    G4LogicalVolume* GetScoringVol_SCINT() const { return fScoringVol_SCINT; }
 
   protected:
 
     G4LogicalVolume*  fScoringVol_PAD;
     G4LogicalVolume*  fScoringVol_PIX;
-    G4AssemblyVolume* fAssemblyVol_PIX;
+    G4LogicalVolume*  fScoringVol_SCINT;
+
+    G4Material* material_tungsten;
+    G4Material* material_Kapton;
+    G4Material* material_PET;
+    G4Material* material_scintillator;
+    G4Material* material_Si;
+    G4Material* material_Al;
+
+    G4double ConstructFoCalE(G4LogicalVolume* envelope);
+    G4double ConstructFoCalEmodified(G4LogicalVolume* envelope);
+    bool ConstructFoCalH(G4LogicalVolume* envelope);
+
+    void CreateMaterials(G4NistManager* manager);
+    G4AssemblyVolume* ConstructPixelLayer();
+    G4AssemblyVolume* ConstructPadLayer();
 };
 #endif

@@ -7,6 +7,9 @@
 #include "G4RunManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4EmSaturation.hh"
+#include "G4LossTableManager.hh"
+#include "G4OpticalPhoton.hh"
 #include "Analysis.hh"
 
 G4int I=0;
@@ -16,9 +19,10 @@ G4double COPYNUM[10];
 SteppingAction::SteppingAction(EventAction* eventAction)
     : G4UserSteppingAction(),
     fEventAction(eventAction),
+    light_scint_model(1),
     fScoringVol_PAD(0),
     fScoringVol_PIX(0),
-    fAssemblyVol_PIX(0)
+    fScoringVol_SCINT(0)
 {}
 
 
@@ -33,9 +37,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             = static_cast<const Geometry*>
             (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
 
-		fScoringVol_PAD = geometry->GetScoringVol_PAD();
-        fScoringVol_PIX = geometry->GetScoringVol_PIX();
-        fAssemblyVol_PIX = geometry->GetAssemblyVol_PIX();
+		fScoringVol_PAD   = geometry->GetScoringVol_PAD();
+        fScoringVol_PIX   = geometry->GetScoringVol_PIX();
+        fScoringVol_SCINT = geometry->GetScoringVol_SCINT();
     }
 
     // Get PreStepPoint and TouchableHandle objects
@@ -47,17 +51,19 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 	auto pos = step->GetPreStepPoint()->GetPosition();
 
     if (volume != fScoringVol_PAD
-		&& volume != fScoringVol_PIX ) return;
+		&& volume != fScoringVol_PIX
+        && volume != fScoringVol_SCINT) return;
+
     //==========================================================================
     G4ThreeVector position_World = preStepPoint->GetPosition();
     G4ThreeVector position_Local = theTouchable->GetHistory()->GetTopTransform().TransformPoint(position_World);
 	G4double edepStep = step->GetTotalEnergyDeposit();
+    G4double eionStep = step->GetTotalEnergyDeposit() - step->GetNonIonizingEnergyDeposit();
+    G4double lightYield = 0;
     //==========================================================================
-	auto analysisManager=G4AnalysisManager::Instance();
-	G4int eventID = 0;
-    const G4Event* evt = G4RunManager::GetRunManager()->GetCurrentEvent();
-    if(evt) eventID = evt->GetEventID();
-	if(edepStep > 0){
+
+	//auto analysisManager=G4AnalysisManager::Instance();
+	if (edepStep > 0){
 	    if ( volume == fScoringVol_PAD ) {
 	        fEventAction->AddeDepPAD(copyNo-IDnumber_PAD_First, edepStep);
 			//G4cout << copyNo-IDnumber_PAD_First << " " << pos.x() << "  " << pos.y() << "  " << edepStep << G4endl;
@@ -69,6 +75,16 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             G4int id = ix + NpixX*iy;
             //G4cout << ialpide << "  (ix,iy)=(" << ix << "," << iy << ")  id=" << id << "  edep=" << edepStep << G4endl;
 	        fEventAction->AddeDepPIX(ialpide, id, edepStep);
+        } else if ( volume == fScoringVol_SCINT ) {
+            G4int itower = copyNo-IDnumber_SCINT_First;
+            if (light_scint_model) {
+                G4EmSaturation* emSaturation = G4LossTableManager::Instance()->EmSaturation();
+                lightYield = emSaturation->VisibleEnergyDepositionAtAStep(step);
+            } else {
+                lightYield = eionStep;
+            }
+            //G4cout << "lightYield : " << lightYield << "  pos : " << position_World << G4endl;
+            fEventAction->AddeDepSCINT(itower, lightYield);
         }
 	}
 

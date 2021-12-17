@@ -68,6 +68,7 @@ RootIO::RootIO() : fNevents(0)
             fHitTree->Branch(Form("data_pix%d_alpide%d", ipix, ialpide), &data_alpide[ipix*NalpideLayer*NumberPixRow*NumberPixCol + ialpide]);
         }
     }
+    fHitTree->Branch("data_scint", &data_scint);
 
     fHitTree->Branch("particle_px", &particle_px, "particle_px/F");
     fHitTree->Branch("particle_py", &particle_py, "particle_py/F");
@@ -118,6 +119,13 @@ void RootIO::WriteAlpide(int ialpide, int i, float a)
     data_alpide[ialpide].push_back(std::make_pair(i, a));
 }
 
+//....oooOO0OOooo........   oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void RootIO::WriteScint(int i, float a)
+{
+    data_scint.push_back(std::make_pair(i, a));
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RootIO::WriteVertex(float x, float y, float z)
@@ -144,6 +152,8 @@ void RootIO::Clear(){
     for (int i = 0; i < NalpideLayer*NumberPixRow*NumberPixRow*NumberPIX; i++) {
         data_alpide[i].clear();
     }
+    data_scint.clear();
+
 	particle_px = 0;
 	particle_py = 0;
 	particle_pz = 0;

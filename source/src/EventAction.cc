@@ -27,14 +27,19 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     G4cout << "Event = " << eventNum <<G4endl;
 
 	//Zero out all the deposit in the beginning of the event
+    for (G4int i = 0; i < NpadX*NpadY*NumberPAD; i++){
+        sum_eDep_PAD[i] = 0;
+    }
+
     for (G4int i = 0; i < NalpideLayer*NumberPixRow*NumberPixCol*NumberPIX; i++){
         for (G4int j = 0; j < NpixX*NpixY; j++){
     		sum_eDep_PIX[i][j] = 0;
     	}
     }
-	for (G4int i = 0; i < NpadX*NpadY*NumberPAD; i++){
-		sum_eDep_PAD[i] = 0;
-	}
+
+    for (G4int i = 0; i < NtowerX*NtowerY; i++){
+        sum_eDep_SCINT[i] = 0;
+    }
 
 	RootIO::GetInstance()->Clear();
 }
@@ -60,14 +65,22 @@ void EventAction::EndOfEventAction(const G4Event* event)
 		for (int iy = 0; iy < NpadY; iy++){
 			for (int ix = 0; ix < NpadX; ix++){
 				G4int i = ix + NpadX*iy + NpadX*NpadY*ilayer;
-		        GetSumPAD(i);
-				//G4cout << i << "  " << ilayer << "  " << ix << "  " << iy << "   " << GetSumPAD(i) << G4endl;
-				if (GetSumPAD(i)) {
+                if (GetSumPAD(i)) {
 					//G4cout << i << "  " << ilayer << "  " << ix << "  " << iy << "   " << GetSumPAD(i) << G4endl;
 			        RootIO::GetInstance()->WritePad(i, GetSumPAD(i));
 				}
 			}
 		}
+    }
+
+    for (G4int ix = 0; ix < NtowerX; ix++) {
+        for (G4int iy = 0; iy < NtowerY; iy++) {
+            G4int i = iy + NtowerY*ix;
+            if (GetSumSCINT(i)) {
+                //G4cout << i << "  " << ix << "  " << iy << "   " << GetSumSCINT(i) << G4endl;
+                RootIO::GetInstance()->WriteScint(i, GetSumSCINT(i));
+            }
+        }
     }
 
     G4PrimaryVertex* primaryVertex = event->GetPrimaryVertex();

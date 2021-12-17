@@ -22,7 +22,7 @@ RunAction::RunAction()
 	// Creating histograms
 	//-----------------------------------------------------------------
 	//char Hist_Name[525];
-	char file_Name[4000];
+	//char file_Name[4000];
 
 	analysisManager->CreateNtuple("Pixel","file_Name");
 	//-----------------------------------------------------------------

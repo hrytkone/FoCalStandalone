@@ -60,6 +60,7 @@ public:
     void WriteEvent(int e);
     void WritePad(int i, float a);
     void WriteAlpide(int ialpide, int i, float a);
+    void WriteScint(int i, float a);
     void WriteParticleKinematics(float px, float py, float pz, float en);
     void WriteVertex(float x, float y, float z);
     void Fill();
@@ -74,6 +75,7 @@ private:
     int event;
     float data_pad[NpadX*NpadY*NumberPAD];
     vector<pair<int, float>> data_alpide[NalpideLayer*NumberPixRow*NumberPixCol*NumberPIX];
+    vector<pair<int, float>> data_scint;
     float particle_px;
     float particle_py;
     float particle_pz;

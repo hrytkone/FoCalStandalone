@@ -24,12 +24,14 @@ class SteppingAction : public G4UserSteppingAction
   private:
     EventAction*  fEventAction;
 
+    G4bool light_scint_model;
+
 	G4LogicalVolume*  fScoringVol_EMCal1;
 	G4LogicalVolume*  fScoringVol_EMCal2;
 
     G4LogicalVolume*  fScoringVol_PAD;
     G4LogicalVolume*  fScoringVol_PIX;
-    G4AssemblyVolume*  fAssemblyVol_PIX;
+    G4LogicalVolume*  fScoringVol_SCINT;
 };
 
 

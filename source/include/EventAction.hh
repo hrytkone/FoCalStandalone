@@ -32,9 +32,18 @@ public:
         return sum_eDep_PIX[ialpide][i];
     }
 
+    inline void AddeDepSCINT(G4int itower, G4double de) {
+        sum_eDep_SCINT[itower] += de;
+    }
+
+    inline G4double GetSumSCINT(G4int itower) {
+        return sum_eDep_SCINT[itower];
+    }
+
 private:
     G4double  sum_eDep_PAD[NpadX*NpadY*NumberPAD];
     G4double  sum_eDep_PIX[NalpideLayer*NumberPixRow*NumberPixCol*NumberPIX][NpixX*NpixY];
+    G4double  sum_eDep_SCINT[NtowerX*NtowerY];
 };
 
 #endif
