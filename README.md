@@ -3,24 +3,30 @@
 These are needed to run the simulation program:
  * Geant4
  * ROOT6
+
 It's important that both have been compiled with the same compiler version, otherwise there will be a linking problem when the program tries to create the dictionary for the custom datatype in which some of the data is saved.
 
 To build the program do this:
 
+```
 cd MiniFoCal
 cmake -DGeant4_DIR=$GEANT4_DIR source/
 make
+```
 
 Environmental variable GEANT4_DIR needs to be set to the Geant4 installation directory.
 
 # Running & modifying the simulation
 
 Running simulation is done just by running
-    ./FoCal_Main
+ ```
+./FoCal_Main
+```
 in the main directory.
 
 ## Setting number of events, partcle gun, etc.:
-    In the main directory you'll find 'GlobalSetup.mac'. There you can change for example the event number or which particle is used.
+
+In the main directory you'll find 'GlobalSetup.mac'. There you can change for example the event number or which particle is used.
 
 ## Changing geometry
 There are lots of variables in source/include/constants.hh which change the simulation setup. These might be the most relevant ones:
