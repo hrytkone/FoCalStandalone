@@ -36,6 +36,6 @@ There are lots of variables in source/include/constants.hh which change the simu
     * if __true__ use 2021 test beam setup (set NumberPAD=1 and NumberPIX=2, NumberW is the number of W plates in front of pad and pixels)
     * if __false__ use default setup (set NumberOfLayers so that it is sum of the pad and pixel layers, also set LayerLayout correctly)
 
-## Other notes
+# Other notes
 
 The code is modified from https://github.com/novitzky/FoCalStandalone and FoCal-H part is from https://github.com/nschmidtALICE/fun4all_eicdetectors/tree/focal_TB/simulation/g4simulation/g4focal.
