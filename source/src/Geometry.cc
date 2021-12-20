@@ -107,13 +107,13 @@ G4double Geometry::ConstructFoCalE(G4LogicalVolume* envelope)
         //This is the PAD layer
         if (LayerLayout[ilayer] == 0) {
             G4double position_Z_PAD_Absorber = Start_Z + PAD_Absorber_Z/2. + TotalLayerThickness;
-            G4double position_Z_PAD		     = Start_Z + PAD_Absorber_Z + PAD_Layer_Thickness/2. + TotalLayerThickness;
+            G4double position_Z_PAD		     = Start_Z + PAD_Absorber_Z + TotalLayerThickness;
 
             new G4PVPlacement(0, G4ThreeVector(Start_X, Start_Y, position_Z_PAD_Absorber), logVol_PAD_Absorber, "PhysVol_W", envelope, false, 0);
 
             G4cout << ilayer << " PAD at " << position_Z_PAD << " " << TotalLayerThickness << G4endl;
             G4ThreeVector trans_PAD = G4ThreeVector(Start_X, Start_Y, position_Z_PAD);
-            assemblyPad->MakeImprint(envelope, trans_PAD, 0);
+            assemblyPad->MakeImprint(envelope, trans_PAD, 0, false, true);
 
             TotalLayerThickness += PAD_Absorber_Z;
             TotalLayerThickness += PAD_Layer_Thickness;
