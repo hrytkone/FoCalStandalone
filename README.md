@@ -9,7 +9,7 @@ It's important that both have been compiled with the same compiler version, othe
 To build the program do this:
 
 ```
-cd MiniFoCal
+cd FoCalStandalone
 cmake -DGeant4_DIR=$GEANT4_DIR source/
 make
 ```
