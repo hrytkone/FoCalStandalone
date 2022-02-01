@@ -204,6 +204,23 @@ G4double Geometry::ConstructFoCalEmodified(G4LogicalVolume* envelope)
     assemblyPad->MakeImprint(envelope, trans_PAD, 0);
     TotalLayerThickness += GapBtwPadAndPixel;
 
+		// Change pad IDs
+    int new_id = IDnumber_PAD_First;
+    std::vector<G4VPhysicalVolume*>::iterator iter = assemblyPad->GetVolumesIterator();
+    for (int i=0; i<(int)assemblyPad->TotalImprintedVolumes(); iter++,i++)
+    {
+        G4VPhysicalVolume* ptr = *iter;
+        if ( ptr ) {
+            if (ptr->GetLogicalVolume()->GetMaterial()->GetName()=="G4_Si") {
+                ptr->SetCopyNo(new_id);
+                new_id++;
+                //G4cout << ptr->GetCopyNo() << "   name : " << ptr->GetName() << G4endl;
+            } else {
+                ptr->SetCopyNo(0);
+            }
+        }
+    }
+
     // ----------------------
     //     PIXEL layers     |
     // ----------------------
@@ -360,7 +377,7 @@ bool Geometry::ConstructFoCalH(G4LogicalVolume* envelope)
     G4VSolid* HCAL_Scintillator  = new G4Tubs("PHCAL_ScintFiber", 0, diameter_fiber/2., Tower_dz/2., 0.,2*M_PI*rad);
 
     G4NistManager* man = G4NistManager::Instance();
-    G4Material* material_absorber = man->FindOrBuildMaterial("G4_Fe");
+    G4Material* material_absorber = man->FindOrBuildMaterial("G4_Cu");
 
     //G4LogicalVolume* logVol_FilledCap = new G4LogicalVolume(HCAL_FilledCap,
     //        G4Material::GetMaterial("G4_AIR"),
