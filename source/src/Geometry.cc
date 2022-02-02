@@ -237,8 +237,8 @@ G4double Geometry::ConstructFoCalEmodified(G4LogicalVolume* envelope)
     G4cout << "=================================================================" << G4endl;
 
     // Change alpide IDs
-    int new_id = IDnumber_PIX_First;
-    std::vector<G4VPhysicalVolume*>::iterator iter = assemblyPixel->GetVolumesIterator();
+    new_id = IDnumber_PIX_First;
+    iter = assemblyPixel->GetVolumesIterator();
     for (int i=0; i<(int)assemblyPixel->TotalImprintedVolumes(); iter++,i++)
     {
         G4VPhysicalVolume* ptr = *iter;
@@ -305,24 +305,19 @@ G4AssemblyVolume* Geometry::ConstructPixelLayer()
 
     G4Box* PIX_Flex  	= new G4Box("PPIX_Flex",	PIX_Flex_X/2.0,      PIX_Flex_Y/2.0,      PIX_Z/2.0);
     G4Box* PIX_Alpide 	= new G4Box("PPIX_Alpide",	PIX_Alpide_X/2.0,    PIX_Alpide_Y/2.0,    PIX_Z/2.0);
-    G4Box* Tungsten 	= new G4Box("PTungsten",	WidthW/2.0, WidthW/2.0, PAD_Absorber_Z/2.0);
     G4Box* PIX_Al       = new G4Box("PPIX_Al",      WidthAl/2.0,         WidthAl/2.0,         PIX_Al_Z/2.0);
 
     G4LogicalVolume* logVol_PIX_Flex	= new G4LogicalVolume( PIX_Flex,    material_Kapton, "LogVol_PIX_Flex", 0, 0, 0 );
     G4LogicalVolume* logVol_PIX_Alpide	= new G4LogicalVolume( PIX_Alpide,  material_Si,     "LogVol_PIX_Alpide", 0, 0, 0 );
     G4LogicalVolume* logVol_PIX_Al      = new G4LogicalVolume( PIX_Al,      material_Al,     "LogVol_PIX_Al", 0, 0, 0 );
-    G4LogicalVolume* logVol_Tungsten 	= new G4LogicalVolume( Tungsten, 	material_tungsten, "LogVol_Tungsten", 0, 0, 0 );
     fScoringVol_PIX = logVol_PIX_Alpide;
 
     G4double position_Z_PIX_Al1         = PIX_Al_Z/2;
-    G4double position_Z_PIX_Absorber	= PIX_Absorber_Z/2 + PIX_Z + PIX_AirGap_AlPlates + PIX_Al_Z;
-    G4double position_Z_PIX_Al2         = PIX_Al_Z/2 + PIX_Absorber_Z + 2*PIX_Z + 2*PIX_AirGap_AlPlates + PIX_Al_Z;
+    G4double position_Z_PIX_Al2         = PIX_Al_Z/2 + PIX_AirGap_AlPlates + PIX_Al_Z;
 
     G4ThreeVector trans_PIX_Al1      = G4ThreeVector(Start_X, Start_Y, position_Z_PIX_Al1);
-    G4ThreeVector trans_PIX_Absorber = G4ThreeVector(Start_X, Start_Y, position_Z_PIX_Absorber);
     G4ThreeVector trans_PIX_Al2      = G4ThreeVector(Start_X, Start_Y, position_Z_PIX_Al2);
     assemblyPixel->AddPlacedVolume(logVol_PIX_Al,    trans_PIX_Al1, 0);
-    assemblyPixel->AddPlacedVolume(logVol_Tungsten,  trans_PIX_Absorber, 0);
     assemblyPixel->AddPlacedVolume(logVol_PIX_Al,    trans_PIX_Al2, 0);
 
     G4Colour blue(0., 0., 1.);
@@ -332,9 +327,9 @@ G4AssemblyVolume* Geometry::ConstructPixelLayer()
     logVol_PIX_Flex->SetVisAttributes(flexVisAttributes);
     logVol_PIX_Alpide->SetVisAttributes(alpideVisAttributes);
 
-    // In front of tungsten
+    // First layer of strips
     for (int irow=0; irow<NumberPixRow; irow++) {
-        G4double position_Z_layer	= PIX_Z/2 + PIX_AirGap_AlPlates + PIX_Al_Z;
+        G4double position_Z_layer	= PIX_Z/2. + PIX_Al_Z;
         G4double position_Y_flex    = -PIX_Full_Length/2. + PIX_Alpide_Y + PIX_Flex_Y/2. + irow*PIX_And_Flex_length;
         G4ThreeVector trans_PIX_flex = G4ThreeVector(Start_X, position_Y_flex, position_Z_layer);
         assemblyPixel->AddPlacedVolume(logVol_PIX_Flex, trans_PIX_flex, 0);
@@ -347,9 +342,9 @@ G4AssemblyVolume* Geometry::ConstructPixelLayer()
         }
     }
 
-    // Behind of tungsten
+    // Second layer of strips
     for (int irow=0; irow<NumberPixRow; irow++) {
-        G4double position_Z_layer	=  PIX_Z/2. + PIX_Absorber_Z + PIX_Z + PIX_AirGap_AlPlates + PIX_Al_Z;
+        G4double position_Z_layer	=  PIX_Al_Z + PIX_AirGap_AlPlates - PIX_Z/2.;
         G4double position_Y_flex    = -PIX_Full_Length/2. + PIX_Flex_Y/2. + irow*PIX_And_Flex_length + PIX_Layers_Offset;
         G4ThreeVector trans_PIX_flex = G4ThreeVector(Start_X, position_Y_flex, position_Z_layer);
         assemblyPixel->AddPlacedVolume(logVol_PIX_Flex, trans_PIX_flex, 0);

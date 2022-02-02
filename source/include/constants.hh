@@ -88,11 +88,11 @@ constexpr G4double PIX_Full_Length = 3*PIX_And_Flex_length;
 constexpr G4double PIX_Full_Width = 3*PIX_Alpide_X;
 constexpr G4double PIX_Layers_Offset = 1.*mm;
 	//Thicknesses
-	constexpr G4double PIX_Absorber_Z       = 3.5*mm;
-    constexpr G4double PIX_AirGap_AlPlates 	= 0.97*mm; // This airgap is between alpide layer and aluminum
-	constexpr G4double PIX_AirGap       	= 1.2*mm;
-    constexpr G4double PIX_Al_Z             = 1.*mm;
-	constexpr G4double PIX_Layer_Thickness  = 2*PIX_Z + 2*PIX_Al_Z + 2*PIX_AirGap_AlPlates + PIX_Absorber_Z;
+    constexpr G4double PIX_Absorber_Z       = 3.5*mm;
+    constexpr G4double PIX_AirGap_AlPlates 	= 2.*mm; // This airgap is between the aluminum plates
+    constexpr G4double PIX_AirGap       	= 1.2*mm;
+    constexpr G4double PIX_Al_Z             = 1.5*mm;
+    constexpr G4double PIX_Layer_Thickness  = 2*PIX_Al_Z + PIX_AirGap_AlPlates;
 	//Plate size
 	constexpr G4double PIX_GuardRingThickness = 0.00*mm;
 	constexpr G4double PIX_MiniFoCal_X = ( (PIX_X*NpixX)+2*PIX_GuardRingThickness)*mm;

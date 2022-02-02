@@ -1,14 +1,14 @@
 # Set up primary generator
 /control/execute primaryGeneratorSetup.mac
 # Set up visulalization envrionment
-#/control/execute visSetup_Simplex.mac
+/control/execute visSetup_Simplex.mac
 ## Set up verbosity
 /control/execute verboseSetup.mac
 ## Invoke the application
 /run/beamOn 0
 /random/setSeeds 41241 87053
 
-/gun/particle pi+
-/gun/energy 100 GeV
-/run/beamOn 20
+#/gun/particle pi+
+#/gun/energy 100 GeV
+#/run/beamOn 20
 #exit
